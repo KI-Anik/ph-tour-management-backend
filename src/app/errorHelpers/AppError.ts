@@ -1,15 +1,13 @@
-
-
 class AppError extends Error {
-    public statusCode : number;
+    public statusCode: number;
 
-    constructor(statusCode : number, message: string, stack:''){
+    constructor(statusCode: number, message: string, stack: '') {
         super(message) // calling js Error class = throw new Error('')
         this.statusCode = statusCode
 
-        if(stack){
+        if (stack) {
             this.stack = stack
-        }else{
+        } else {
             Error.captureStackTrace(this, this.constructor)
         }
 
