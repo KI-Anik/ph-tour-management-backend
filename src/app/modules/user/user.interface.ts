@@ -28,7 +28,7 @@ export interface IUser {
     address?: string;
     isDeleted?: string;
     isActive?: IsActive;
-    isVerified?: string;
+    isVerified?: boolean;
     role: Role;
     auths : IAuthProvider[] ; // user can login both [google or password/credential]
 
