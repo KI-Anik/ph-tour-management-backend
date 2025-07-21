@@ -25,6 +25,7 @@ export const checkAuth = (...authRoles: string[]) => async (req: Request, res: R
         }
         console.log(verifiedToken);
 
+        req.user = verifiedToken
         next()
 
     } catch (error) {
