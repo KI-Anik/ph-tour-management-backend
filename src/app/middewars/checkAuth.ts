@@ -11,7 +11,7 @@ export const checkAuth = (...authRoles: string[]) => async (req: Request, res: R
         const accessToken = req.headers.authorization
 
         if (!accessToken) {
-            throw new AppError(403, "No token received", "")
+            throw new AppError(403, "No token received")
         }
 
         {/* const verifiedToken = jwt.verify(accessToken, 'secret')
@@ -21,7 +21,7 @@ export const checkAuth = (...authRoles: string[]) => async (req: Request, res: R
         {/**(verifiedToken as JwtPayload).role !== Role.ADMIN)
         ** checking for admin Or not*/}
         if (!authRoles.includes(verifiedToken.role)) {
-            throw new AppError(403, "You are not permitted to view this", "")
+            throw new AppError(403, "You are not permitted to view this")
         }
         console.log(verifiedToken);
 
