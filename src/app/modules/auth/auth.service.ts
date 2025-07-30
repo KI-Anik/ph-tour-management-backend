@@ -1,11 +1,13 @@
 import bcrypt from 'bcryptjs';
 import httpStatus from 'http-status-codes';
 import AppError from "../../errorHelpers/AppError"
-import { IUser } from "../user/user.interface"
+import { IsActive, IUser } from "../user/user.interface"
 import { User } from "../user/user.model"
 // import jwt from 'jsonwebtoken';
-import { generateToken } from '../../utils/jwt';
+import { generateToken, verifyToken } from '../../utils/jwt';
 import { envVars } from '../../config/env';
+import { createUserTokens } from '../../utils/userTokens';
+import { JwtPayload } from 'jsonwebtoken';
 
 const credentialsLogin = async (payload: Partial<IUser>) => {
     const { email, password } = payload
@@ -22,29 +24,52 @@ const credentialsLogin = async (payload: Partial<IUser>) => {
         throw new AppError(httpStatus.FORBIDDEN, "Incorrect password", "")
     }
 
+    const userTokens = createUserTokens(isUserExist)
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: pass, ...rest } = isUserExist.toObject()
+    //removed password from response/frontend
+
+    return {
+        accessToken: userTokens.accessToken,
+        refreshToken: userTokens.refreshToken,
+        user: rest
+    }
+
+}
+
+const getNewAccessToken = async (refreshToken: string) => {
+    const verifiedToken = verifyToken(refreshToken, envVars.JWT_REFRESH_SECRET) as JwtPayload
+
+    const isUserExist = await User.findOne({ email: verifiedToken.email })
+    if (!isUserExist) {
+        throw new AppError(httpStatus.NOT_FOUND, "User does not exist")
+    }
+
+    if (isUserExist.isActive === IsActive.BLOCKED || isUserExist.isActive === IsActive.INACTIVE) {
+        throw new AppError(httpStatus.BAD_REQUEST, `User is ${isUserExist.isActive}`)
+    }
+
+    if (isUserExist.isDeleted) {
+        throw new AppError(httpStatus.BAD_REQUEST, "User is deleted")
+    }
+
     const jwtPayload = {
         userId: isUserExist._id,
         email: isUserExist.email,
         role: isUserExist.role
     }
 
-    // const accessToken = jwt.sign(jwtPayload, 'secret', {
-    //     expiresIn: "1d"
-    // })
-    
-    {/**token generate function from  utils/jwt */}
-    const accessToken = generateToken(
-        jwtPayload,
-        envVars.JWT_ACCESSC_SECRET,
-        envVars.JWT_ACCESSC_EXPIRES
-    )
+    const accessToken = generateToken(jwtPayload, envVars.JWT_ACCESS_SECRET, envVars.JWT_ACCESS_EXPIRES)
 
-    return {
+    return{
         accessToken
     }
-
 }
 
+
+
 export const AuthServices = {
-    credentialsLogin
+    credentialsLogin,
+    getNewAccessToken
 }

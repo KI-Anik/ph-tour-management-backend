@@ -5,10 +5,12 @@ import express, {Request, Response} from 'express';
 import { router } from './app/routes';
 import { globalErrorHandler } from './app/middewars/globalErrorHandler';
 import notFound from './app/middewars/notFound';
+import cookieParser from 'cookie-parser';
 // import { envVars } from './app/config/env';
 
 const app = express()
 
+app.use(cookieParser())
 app.use(express.json())
 app.use(cors())
 // app.use('/api/v1/user', UserRoutes)

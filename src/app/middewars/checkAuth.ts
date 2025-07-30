@@ -16,7 +16,7 @@ export const checkAuth = (...authRoles: string[]) => async (req: Request, res: R
 
         {/* const verifiedToken = jwt.verify(accessToken, 'secret')
         *token verify function from  utils/jwt */ }
-        const verifiedToken = verifyToken(accessToken, envVars.JWT_ACCESSC_SECRET) as JwtPayload
+        const verifiedToken = verifyToken(accessToken, envVars.JWT_ACCESS_SECRET) as JwtPayload
 
         {/**(verifiedToken as JwtPayload).role !== Role.ADMIN)
         ** checking for admin Or not*/}
