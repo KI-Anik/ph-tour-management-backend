@@ -14,7 +14,7 @@ const startServer = async () => {
         console.log('connected to db');
 
         server = app.listen(envVars.PORT, () => {
-            console.log('server running on port 5000');
+            console.log(`server running on port ${envVars.PORT}`);
         })
     } catch (error) {
         console.log(error);
@@ -78,6 +78,6 @@ process.on('SIGINT', () => {
  2. uncaught exception error :
  throw new Error('i forgot to catch this local error')
 
- 3. signal termination system error: 
+ 3. signal termination system error: SIGTERM
 
  */

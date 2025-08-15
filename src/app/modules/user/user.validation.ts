@@ -35,7 +35,7 @@ export const createUserZodSchema = z.object({
 });
 
 
-export const updateSchemaZod = z.object({
+export const updateUserZodSchema = z.object({
     name: z
         .string({ invalid_type_error: "name must be string" })
         .min(2, { message: "name must be contain at least 2 character" })

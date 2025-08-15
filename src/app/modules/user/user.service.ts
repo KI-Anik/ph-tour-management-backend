@@ -76,7 +76,7 @@ const getAllUsers = async () => {
     return {
         data: users,
         meta: {
-            totals: totalUsers
+            total: totalUsers
         }
     }
 }

@@ -1,4 +1,3 @@
-import  httpStatus  from 'http-status-codes';
 import cors from 'cors';
 import express, {Request, Response} from 'express';
 // import { UserRoutes } from './app/modules/user/user.route';
@@ -6,7 +5,6 @@ import { router } from './app/routes';
 import { globalErrorHandler } from './app/middewars/globalErrorHandler';
 import notFound from './app/middewars/notFound';
 import cookieParser from 'cookie-parser';
-// import { envVars } from './app/config/env';
 
 const app = express()
 
@@ -25,14 +23,7 @@ app.get('/', async (req : Request, res : Response)=>{
 })
 
 // global error handler --> moved middleware folder for code organization
-// app.use((err : any, req : Request, res : Response, next : NextFunction)=>{
-//     res.status(400).json({
-//         success: false,
-//         message: `something went wrong ${err.message}, from global error`,
-//         err,
-//         stack : envVars.NODE_ENV === 'development' ? err.stack : null
-//     })
-// }) 
+
 app.use(globalErrorHandler)
 
 app.use(notFound)
